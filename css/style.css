@@ -4,3 +4,12 @@
 * {
 	box-sizing: border-box;
 }
+.mdl-layout__drawer {
+	background: #242424;
+	border: none;
+}
+.mdl-layout__drawer .mdl-navigation 
+.mdl-navigation__link:hover {
+	background: #808080;
+	color: #fafafa;
+}
