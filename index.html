@@ -6,6 +6,28 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<link rel="stylesheet" href="css/style.css"/>
 	<script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+	<script>
+	window.addEventListener('DOMContentLoaded', function() {
+		var contentsLinks = document.querySelectorAll('.contents-list__item-link');
+		Array.prototype.forEach.call(contentsLinks, function(contentsLink) {
+			contentsLink.addEventListener('mouseover', onHover);
+		});
+		function onHover(e) {
+			var elemId = this.dataset.id;
+			var desc = document.getElementById(elemId);
+			if (desc == null) {
+				return;
+			}
+			desc.style.display = 'block';
+			this.addEventListener('mouseleave', onMouseLeave);
+		}
+		function onMouseLeave(e) {
+			var elemId = this.dataset.id;
+			var desc = document.getElementById(elemId);
+			desc.style.display = 'none';
+		}
+	});
+	</script>
 	<title>Insert title here</title>
 </head>
 <body>
@@ -21,27 +43,36 @@
 					<h3 class="layout-title">コンテンツ</h3>
 					<ul class="contents-list">
 						<li class="contents-list__item">
-							<a href="#" class="contents-list__item-link">Javaの基礎</a>
+							<a href="#" class="contents-list__item-link" data-id="javabase-desc">Javaの基礎</a>
 						</li>
 						<li class="contents-list__item">
-							<a href="#" class="contents-list__item-link">HTMLとCSS</a>
+							<a href="#" class="contents-list__item-link" data-id="html-desc">HTMLとCSS</a>
 						</li>
 						<li class="contents-list__item">
-							<a href="#" class="contents-list__item-link">データベースとSQL</a>
+							<a href="#" class="contents-list__item-link" data-id="database-desc">データベースとSQL</a>
 						</li>
 						<li class="contents-list__item">
-							<a href="#" class="contents-list__item-link">JavaによるWebアプリの基礎</a>
+							<a href="#" class="contents-list__item-link" data-id="javaweb-desc">JavaによるWebアプリの基礎</a>
 						</li>
 						<li class="contents-list__item">
-							<a href="#" class="contents-list__item-link">オブジェクト指向プラクティス</a>
+							<a href="#" class="contents-list__item-link" data-id="oop-desc">オブジェクト指向プラクティス</a>
 						</li>
 						<li class="contents-list__item">
-							<a href="#" class="contents-list__item-link">フレームワークによる開発</a>
+							<a href="#" class="contents-list__item-link" data-id="framework-desc">フレームワークによる開発</a>
 						</li>
 					</ul>
 				</div>
 				<div class="layout-sidenav">
-					
+					<section id="javabase-desc" class="contents-description">
+						<span><!--
+						-->Java初級者向けのコンテンツです。Javaの開発環境（JDK）と実行環境のインストールから簡単なプログラムを実装できるようになるまでを<!--
+						-->順を追って解説していきます。</span>
+					</section>
+					<section id="html-desc" class="contents-description">
+						<span><!--
+						-->HTMLとCSSの基礎について学びます。Webページの作成、スタイルシート（CSS）によるスタイリングの方法を習得していきます。また、JavaScriptに<!--
+						-->ついても基礎的な使い方を習得します。</span>
+					</section>
 				</div>
 			</div>
 		</div>

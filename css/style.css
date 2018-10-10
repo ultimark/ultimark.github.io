@@ -102,3 +102,10 @@
 .contents-list__item-link:hover {
 	background: #526476;
 }
+.contents-description {
+	position: absolute;
+	top: 48px;
+	left: 0;
+	width: 100%;
+	display: none;
+}
