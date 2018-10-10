@@ -21,41 +21,84 @@
   direction: ltr;
 }
 * {
-  box-sizing: border-box;
+	box-sizing: border-box;
+	font-size: 16px;
 }
-.mdl-layout__drawer {
-  background: #242424;
-  border: none;
+.mdl-layout__header-row {
+	padding: 0px 160px;
 }
-.mdl-layout__drawer .mdl-navigation .mdl-navigation__link {
-  color: #fafafa;
+.layout {
+	position: absolute;
+	top: 16px;
+	left: 160px;
+	right: 160px;
+	padding: 16px 0px;
+	display: flex;
 }
-.mdl-layout__drawer .mdl-navigation .mdl-navigation__link:hover {
-  background: #808080;
+.layout .layout-content {
+	flex-grow: 1;
+	margin-right: 256px;
+	overflow-x: hidden;
 }
-.mdl-cell.center {
-  margin-left: auto;
-  margin-right: auto;
+.layout .layout-sidenav {
+	position: absolute;
+	top: 16px;
+	right: 0;
+	width: 240px;
+	transition: .5s;
 }
-.section {
-  margin: 0px 0px 24px 0px;
+.layout-title {
+	line-height: 32px;
+	font-size: 20px;
+	margin: 8px 0px;
 }
-.section-title {
-  font-size: 24px;
-  font-weight: 600;
-  margin: 8px 0px;
-  border-bottom: 1px solid #fafafa;
+@media (max-width: 1023px) {
+	.layout {
+		left: 64px;
+		right: 64px;
+	}
+	.mdl-layout__header-row {
+		padding: 0px 64px;
+	}
 }
-.section-sentence {
-  font-size: 16px;
-  margin: 8px 0px;
+@media (max-width: 767px) {
+	.layout .layout-sidenav {
+		display: none;
+	}
+	.layout {
+		left: 16px;
+		right: 16px;
+	}
+	.layout .layout-content {
+		margin-right: 0;
+	}
+	.mdl-layout__header-row {
+		padding: 0px 16px;
+	}
 }
-.mdl-list__item {
-  padding: 0;
-  font-size: 16px;
+.contents-list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
 }
-.mdl-list__item-link {
-  text-indent: 16px;
-  text-decoration: none;
-  color: inherit;
+.contents-list .contents-list__item {
+	height: auto;
+	width: 100%;
+	line-height: 32px;
+	margin: 8px 0px;
+}
+.contents-list .contents-list__item 
+.contents-list__item-link {
+	height: 32px;
+	width: 100%;
+	display: block;
+	text-decoration: none;
+	color: #73c2fb;
+	font-size: 18px;
+	text-indent: 16px;
+	white-space: nowrap;
+}
+.contents-list .contents-list__item 
+.contents-list__item-link:hover {
+	background: #526476;
 }
