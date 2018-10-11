@@ -4,10 +4,12 @@
 	top: 0;
 	left: 0;
 	width: 100%;
-	transition: .8s;
+	transition: opacity .8s;
+	transform: scale(0);
 	opacity: 0;
 }
 .rotate-panel.active {
+	transform: scale(1);
 	opacity: 1;
 }
 .rotate-panel .rotate-panel__header {
