@@ -63,3 +63,46 @@
 .contents-list__item-link:hover {
 	background: #37474f;
 }
+.section {
+	height: auto;
+	width: 100%;
+	padding: 24px;
+}
+.section .section-title {
+	height: 32px;
+	width: 100%;
+	line-height: 32px;
+	font-size: inherit;
+	margin: 0px;
+	border-bottom: 1px solid #fafafa;
+}
+.section p {
+	margin: 16px 0px;
+	font-size: inherit;
+}
+.section .tips {
+	width: 100%;
+	padding: 0px 16px;
+	border: 1px solid #fafafa;
+	border-radius: 8px;
+	margin: 8px 0px;
+}
+.section .code-snipet {
+	width: 100%;
+	padding: 0px 16px;
+	border: 1px solid #fafafa;
+	border-radius: 8px;
+	margin: 8px 0px;
+}
+.section .tips::before {
+	content: 'Tips';
+	width: 100%;
+	display: block;
+	padding: 8px 0px;
+	border-bottom: 1px dashed #fafafa;
+}
+.section .section-return {
+	margin-top: 32px;
+	display: flex;
+	justify-content: flex-end;
+}
