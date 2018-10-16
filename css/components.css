@@ -86,7 +86,7 @@
 	padding: 0px 16px;
 	border: 1px solid #fafafa;
 	border-radius: 8px;
-	margin: 8px 0px;
+	margin: 8px 0px 32px 0px;
 }
 .section .code-snipet {
 	width: 100%;
@@ -96,7 +96,7 @@
 	margin: 8px 0px;
 }
 .section .tips::before {
-	content: 'Tips';
+	content: 'Column';
 	width: 100%;
 	display: block;
 	padding: 8px 0px;
