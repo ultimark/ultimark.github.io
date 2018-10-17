@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link rel="stylesheet" href="../../css/style.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<title>JSPとサーブレット</title>
+</head>
+<body class="blue-grey darken-4 grey-text text-lighten-5">
+	<div class="layout-container">
+		<div class="navbar-fixed">
+			<nav class="grey darken-4">
+				<div class="nav-wrapper">
+					<div class="container">
+						<a href="index.html" class="brand-logo">Ultimark</a>
+					</div>
+				</div>
+			</nav>
+		</div>
+		<div class="container layout-content">
+			<h4 class="layout-title">JSPとサーブレット</h4>
+			<section class="section z-depth-2">
+				<h5 class="section-title">１．サーブレットとは</h5>
+				<p>サーブレットとはサーバー上でウェブページを動的に生成したり、データ処理を行うためのJavaプログラムです。<a href="web-basic.html" target="_blank">こちら</a>で<!--
+				-->解説したとおり、WebアプリケーションはWebサーバーから転送されたリクエストを処理し、Webサーバーに結果を返すという形で動作しますが、この「Webサーバー<!--
+				-->からのリクエストを受け付ける」、「Webサーバーに結果を返す」という役割を担うのがサーブレットです。言い換えると、サーブレットはWebサーバーとアプリケーションサーバー<!--
+				-->のインターフェースであると考えることができます。</p>
+				
+				<h5 class="section-title">２．サーブレットの仕組み</h5>
+				<p>上記のとおり、サーブレットはWebサーバーからのリクエストを受け付け、Webサーバーへレスポンスを返す役割を担います。実際にはWebサーバーとサーブレットの間に<!--
+				-->リクエストプロセッサーという仕組みがあるのですが、リクエストプロセッサーは基本的にリクエストされたURLに対応するサーブレットに処理を委譲しているだけですので、<!--
+				-->詳細な説明は割愛します。</p>
+				<img src="../../img/WS000025.JPG" class="responsive-img z-depth-2" />
+				<p>Webサーバーからリクエストを受け取ったアプリケーションサーバーはリクエストプロセッサーにリクエストを引き継ぎます。リクエストプロセッサーはリクエストされたURLに基づいて<!--
+				-->リクエストを処理するサーブレットを決定します。つまり、サーブレットはURLに紐付いているということになります。このようにリクエストされたURLを基にして実行すべき処理を<!--
+				-->決定する形態のWebアプリケーションをアクションベースのWebアプリケーションといいます。</p>
+				<div class="tips blue-grey darken-2 z-depth-2">
+					<p>アクションベースのWebアプリケーションに対して、コンポーネントベースのWebアプリケーションという形態もあります。これはリクエストされたURLではなく、リクエストされた<!--
+					-->リソースに基づいて実行される処理が決定される形態のWebアプリケーションです。コンポーネントベースのWebアプリケーションではアプリケーションはHTMLファイルと<!--
+					-->紐付くことになります。これはあたかもHTMLファイルの背後でJavaプログラムが実行されているようなイメージになりますので、HTMLファイルに紐付くJavaクラスを<!--
+					-->バッキングビーン（Backing Bean）と呼んだりします。</p>
+					<p>※　BeanとはJavaオブジェクトの慣用的な呼び方です。</p>
+				</div>
+				
+				<h5 class="section-title">３．Hello Servlet</h5>
+				<p>それでは実際にEclipseでWebアプリケーションを作成してみましょう。Eclipseの上部メニューからファイル→新規→その他と選択し、表示された画面でWeb→動的Webプロジェクト<!--
+				-->を選択して次へをクリックしてください。</p>
+				<img src="../../img/WS000026.JPG" class="responsive-img z-depth-2" />
+				<p>プロジェクトの設定を行います。以下の画像のとおりに入力していってください。</p>
+				<img src="../../img/WS000027.JPG" class="responsive-img z-depth-2" />
+				<img src="../../img/WS000029.JPG" class="responsive-img z-depth-2" />
+				<img src="../../img/WS000030.JPG" class="responsive-img z-depth-2" />
+				<p>これでservlet-sampleというプロジェクトが作成されたはずです。それでは早速サーブレットを記述していきます。srcフォルダの上で右クリックして表示されたメニューで新規→クラスを<!--
+				-->選択してください。表示された画面で以下のように入力し、完了をクリックします。</p>
+				<img src="../../img/WS000031.JPG" class="responsive-img z-depth-2" />
+				<p>全てのサーブレットはjavax.servlet.http.HttpServletクラスまたはそのサブクラスを継承しなければならないという制約がありますので、スーパークラス（継承元クラス）は<!--
+				-->javax.servlet.http.HttpServletクラスとしています。作成したSampleServletクラスを以下のように実装してください。</p>
+				<img src="../../img/WS000032.JPG" class="responsive-img z-depth-2" />
+				<p>記述が完了したらAlt + Shift + Xを同時押しした後にRを押下してください。サーブレットが起動して以下のような画面が表示されるはずです。</p>
+				<img src="../../img/WS000033.JPG" class="responsive-img z-depth-2" />
+				<p>これでサーブレットによるHTMLの生成が完成しました。SampleServletクラスのソースコードと実際に表示された画面をよく見比べてみてください。PrintWriterオブジェクトによって<!--
+				-->サーブレットがHTMLを書き出している様子がつかめると思います。これが動的なHTMLの生成です。</p>
+				
+				<h5 class="section-title">４．JSPとは</h5>
+				<p>サーブレットによって動的なHTMLを生成する方法を見てきました。しかし、上記のように簡単なHTMLなら良いですが、複雑なHTMLをサーブレットで記述しなければならないとなると<!--
+				-->この方法では問題がありそうです。サーブレットからHTMLを生成する際はPrintWriter#writeメソッドの引数にHTMLに該当する文字列を渡しているということになるのですが<!--
+				-->この方法だとHTMLに構文エラーがあったとしても事前に検出することができません。なぜなら、PrintWriterオブジェクトのwriteメソッドは引数で渡された文字列を書き出しているだけ<!--
+				-->であり、引数で渡された文字列がHTMLなのか単なるプレーンテキストなのか判断ができないからです。</p>
+				<p>そこでHTMLを雛形として、そこにロジックを埋め込むことによって動的なHTMLを生成する方法が考えられました。これがJSP（Java Server Pages）です。JSPはHTMLの構造を<!--
+				-->踏襲しつつ、この後説明する式やスクリプトレットといった仕組みでHTMLファイルにJavaプログラムを埋めこむことができるようにしたものです。これによって、サーブレット内でPrintWriter<!--
+				-->を使ってHTMLを書き出す必要はなくなりました。</p>
+				
+				<h5 class="section-title">５．Hello JSP</h5>
+				<p>それでは実際にJSPを作成してみましょう。servlet-sampleの直下のwebappフォルダを右クリックして表示されたメニューで新規→その他を選択してください。表示された画面で<!--
+				-->Web→JSPファイルを選択して次へを押下します。</p>
+				<img src="../../img/WS000034.JPG" class="responsive-img z-depth-2" />
+				<p>ファイル名をsample.jspとして完了をクリックしてください。</p>
+				<img src="../../img/WS000035.JPG" class="responsive-img z-depth-2" />
+				<p>これでJSPの雛形がwebappフォルダ直下に作成されたはずです。ここで作成されたJSPファイルの&lt;body&gt;から&lt;/body&gt;の間に以下の一文を加えてみてください。</p>
+				<div class="code-snipet blue-grey darken-2 z-depth-2">
+					<p>&lt;%= new java.util.Date() %&gt;</p>
+				</div>
+				<p>sample.jspがエディターで表示されている状態でAlt + Shift + Xを同時押しした後にRを押下してください。JSPが起動して以下のような画面が表示されればOKです。</p>
+				<img src="../../img/WS000036.JPG" class="responsive-img z-depth-2" />
+				<p>先ほどJSPファイルに追記した&lt;%= new java.util.Date() %&gt;の部分が式と呼ばれる構文です。これはJSPファイルにJavaプログラムを埋め込むための特殊な記法<!--
+				-->なのですが、一つの式にはJavaプログラムを一行しか記述することができません。故に、式の中に記述するJavaプログラムは文末記号であるセミコロン（;）を記述しません。<!--
+				-->一行しか書けないので文末記号の意味がないからです。また式の中には戻り値のないメソッドを記述することもできません。ですので以下のような記述はコンパイルエラーとなります。</p>
+				<div class="code-snipet blue-grey darken-2 z-depth-2">
+					<p>&lt;%= System.out.println("Hello JSP") %&gt;</p>
+				</div>
+				<p>これはJSPを解釈するTomcatのプロセッサーが式の中身を評価して得られたオブジェクトのtoStringメソッドを暗黙のうちに呼び出しているからです。では、以下のような記述も<!--
+				-->コンパイルエラーとなるのでしょうか。</p>
+				<div class="code-snipet blue-grey darken-2 z-depth-2">
+					<p>&lt;%= 1 %&gt;</p>
+				</div>
+				<p>1はint型の値ですね。int型は基本データ型でありオブジェクトではありません。従ってtoStringメソッドも持っていません。この理屈からするとコンパイルエラーになりそうですが<!--
+				-->実際はそうはなりません。int型の値である1はそのラッパーオブジェクトであるIntegerクラスのインスタンスとみなされるためです。これをオートボクシング（Auto Boxing）と<!--
+				-->いいます。</p>
+				<div class="tips blue-grey darken-2 z-depth-2">
+					<p>これから記事を読みながらWebアプリケーションの動作を頻繁に確認していくことになると思いますが、これは頻繁にTomcatの起動と停止を繰り返すということを意味します。<!--
+					-->Tomcatの起動と停止をEclipseから行うにはEclipseのサーバービューを使うと便利ですので、ここでご紹介しておきます。上部メニューからウィンドウ→ビューの表示<!--
+					-->を選択し、表示された画面でサーバー→サーバーを選択してOKをクリックしてください。図のようなビューが表示されます。ここからデバッグ起動、通常起動、停止などの<!--
+					-->操作を行うことができます。</p>
+					<img src="../../img/WS000037.JPG" class="responsive-img z-depth-2"/>
+					<p>以降は特別な説明がない限り、Tomcatの起動と停止はこのサーバービューから実行するものとして進めていきます。</p>
+				</div>
+				
+				<div class="section-return">
+					<a href="../../index.html" class="btn waves-effect waves-light">トップ</a>
+				</div>
+			</section>
+		</div>
+	</div>
+</body>
+</html>

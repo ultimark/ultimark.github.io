@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link rel="stylesheet" href="../../css/style.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<title>Apache Tomcatのセットアップ</title>
+</head>
+<body class="blue-grey darken-4 grey-text text-lighten-5">
+	<div class="layout-container">
+		<div class="navbar-fixed">
+			<nav class="grey darken-4">
+				<div class="nav-wrapper">
+					<div class="container">
+						<a href="index.html" class="brand-logo">Ultimark</a>
+					</div>
+				</div>
+			</nav>
+		</div>
+		<div class="container layout-content">
+			<h4 class="layout-title">Apache Tomcatのセットアップ</h4>
+			<section class="section z-depth-2">
+				<h5 class="section-title">１．Apache Tomcatとは</h5>
+				<p>Apache Tomcat（以下、Tomcat）とはJavaでWebアプリケーションを開発・運用する際に必要となるアプリケーションサーバーの中の一つです。Java Servletの<!--
+				 -->実行環境であることから「サーブレットコンテナ」とも呼ばれます。誰でも無料で利用することができます。</p>
+				
+				<h5 class="section-title">２．Tomcatのセットアップ</h5>
+				<p>まずはTomcat本体を入手します。現在<a href="http://tomcat.apache.org/" target="_blank">公式サイト</a>から入手できるのはバージョン7、8、9のいずれかに<!--
+				-->なります。今回は最新版のバージョン9を利用することにします。バージョン9は<a href="https://tomcat.apache.org/download-90.cgi" target="_blank">こちら</a><!--
+				-->から入手できます。</p>
+				<img src="../../img/WS000018.JPG" class="responsive-img z-depth-2" />
+				<p>ここではWindows64bit版を例に解説します。32bitのWindowsをお使いの場合は「32-bit Windows zip」をダウンロードしてください。リンクをクリックすると<!--
+				-->ダウンロードが開始されますので、任意の場所にダウンロードします。ダウンロードが完了したら、zipファイルができあがっていますので、「C:\Apache Tomcat」フォルダ<!--
+				-->を作成し、その中に解凍してください。</p>
+				<img src="../../img/WS000019.JPG" class="responsive-img z-depth-2" />
+				<p>解凍が完了したらコマンドプロンプトを起動し、以下の2つのコマンドを実行してください。なお、起動したコマンドプロンプトはコマンド実行後も閉じずに開いたままに<!--
+				-->しておいてください。（Tomcatを停止する時の手間を省くため）</p>
+				<div class="code-snipet blue-grey darken-2">
+					<p>CD C:\Apache Tomcat\apache-tomcat-9.0.12\bin</p>
+					<p>startup</p>
+				</div>
+				<p>Webブラウザを起動し、アドレスバーに以下のURLを入力してエンターキーを押下してください。</p>
+				<div class="code-snipet blue-grey darken-2">
+					<p>http://localhost:8080</p>
+				</div>
+				<p>以下のような画面が表示されればOKです。</p>
+				<img src="../../img/WS000020.JPG" class="responsive-img z-depth-2" />
+				<p>Tomcatが問題なく起動できることを確認できました。Tomcatを起動したのコマンドプロンプトで以下のコマンドを実行してTomcatを停止します。</p>
+				<div class="code-snipet blue-grey darken-2">
+					<p>shutdown</p>
+				</div>
+				
+				<h5 class="section-title">３．Eclipseとの連携</h5>
+				<p>Tomcatのセットアップが完了しましたので、Eclipseとの連携設定を行います。先ほどはコマンドプロンプトからTomcatを起動・停止しましたが、Eclipseとの連携設定<!--
+				-->を行っておくことで、EclipseからTomcatの起動と停止ができるようになります。Eclipseの上部メニューからウィンドウ→設定と選択し、表示された画面の左側にあるメニュー<!--
+				-->からサーバー→ランタイム環境を選択します。</p>
+				<img src="../../img/WS000021.JPG" class="responsive-img z-depth-2" />
+				<p>表示された画面で追加ボタンを押下し、表示された画面でApache→Apache Tomcat v9.0を選択して次へボタンを押下します。</p>
+				<img src="../../img/WS000022.JPG" class="responsive-img z-depth-2" />
+				<p>表示された画面のTomcatインストールディレクトリ欄に以下のパスを指定し、完了ボタンをクリックしてください。</p>
+				<div class="code-snipet blue-grey darken-2">
+					<p>C:\Apache Tomcat\apache-tomcat-9.0.12</p>
+				</div>
+				<img src="../../img/WS000023.JPG" class="responsive-img z-depth-2" />
+				<p>以上で設定は完了です。最初の画面に戻りますので、適用して閉じるボタンをクリックして設定を反映させてください。</p>
+				<img src="../../img/WS000024.JPG" class="responsive-img z-depth-2" />
+				<p>次回はJSPとサーブレットについて解説していきます。</p>
+				
+				<div class="section-return">
+					<a href="../../index.html" class="btn waves-effect waves-light">トップ</a>
+				</div>
+			</section>
+		</div>
+	</div>
+</body>
+</html>
