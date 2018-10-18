@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link rel="stylesheet" href="../../css/style.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<title>リクエストとレスポンス</title>
+</head>
+<body class="blue-grey darken-4 grey-text text-lighten-5">
+	<div class="layout-container">
+		<div class="navbar-fixed">
+			<nav class="grey darken-4">
+				<div class="nav-wrapper">
+					<div class="container">
+						<a href="index.html" class="brand-logo">Ultimark</a>
+					</div>
+				</div>
+			</nav>
+		</div>
+		<div class="container layout-content">
+			<h4 class="layout-title">リクエストとレスポンス</h4>
+			<section class="section z-depth-2">
+				<h5 class="section-title">１．リクエストとレスポンス</h5>
+				<p>Webの世界ではリクエストとレスポンスという言葉が頻繁に出てきます。リクエストはWebクライアントからWebサーバーへの要求、レスポンスはWebサーバーから<!--
+				-->Webクライアントへの応答をそれぞれ意味しています。例えば以下にGoogleへのリンクがあります。</p>
+				<p><a href="https://google.co.jp" target="_blank">https://google.co.jp</a></p>
+				<p>このリンクをクリックすることでWebブラウザはgoogle.co.jpという名前のWebサーバーにWebページを見せるように要求しているということになります。これが<!--
+				-->リクエストです。これに対して、要求を受け付けたgoogle.co.jpというWebサーバーは以下のようなWebページを表示します。</p>
+				<img src="../../img/WS000042.JPG" class="responsive-img z-depth-2"/>
+				<p>これがレスポンスです。</p>
+				<div class="tips blue-grey darken-2 z-depth-2">
+					<p>上記の説明ではgoogle.co.jpというWebサーバーがWebページを表示しているかのような書き方をしてしまいましたが、厳密に言うとWebサーバーが返すレスポンスは<!--
+					-->単なるテキストデータに過ぎません。サーバーが返してきたテキストデータを解釈して表示するのはWebブラウザの仕事です。</p>
+				</div>
+				
+				<h5 class="section-title">２．Javaオブジェクトでの表現</h5>
+				<p><a href="jsp-servlet.html" target="_blank">前回記事</a>で説明したようにWebサーバーから転送されてきたリクエストを受け付けて、リクエストに応じた処理を<!--
+				-->行い、Webサーバーにレスポンスを返すのがサーブレットの仕事です。サーブレット自身はJavaオブジェクトですので、リクエストやレスポンスもJavaオブジェクトとして扱われなければ<!--
+				-->なりません。リクエストはHttpServletRequestオブジェクト、レスポンスはHttpServletResponseオブジェクトとしてそれぞれ定義されています。</p>
+				<img src="../../img/WS000043.JPG" class="responsive-img z-depth-2"/>
+				<p>前回作成したSampleServletの実装を確認してください。doGetメソッドの引数にHttpServletRequestオブジェクトとHttpServletResponseオブジェクトが渡されている<!--
+				-->ことが確認できると思います。これらのオブジェクトはWebサーバーからのリクエストを受け取ったサーブレットコンテナ（Tomcat）が自動的に生成してリクエストプロセッサーに引き渡して<!--
+				-->います。リクエストプロセッサーは実際に処理を担当しているサーブレットにこれらのオブジェクトを引き渡しているという仕組みになっています。</p>
+				
+				<h5 class="section-title">３．JSPにおけるリクエストとレスポンス</h5>
+				<p>サーブレットの場合はdoGetメソッドの引数にリクエストとレスポンスが渡されますのでこれらを操作することが可能ですが、JSPファイルを見るとHttpServletRequestもHttpServletResponseも<!--
+				-->登場してきません。ではJSPではこれらのオブジェクトを扱うことができないのでしょうか。いいえ、そんなことはありません。以下のコードを見てください。</p>
+				<img src="../../img/WS000044.JPG" class="responsive-img z-depth-2"/>
+				<p>いきなり何の前触れもなくrequestという名前のオブジェクトが登場してきています。実はこれはHttpServletRequestのインスタンスなのです。本来であればHttpServletRequest型の<!--
+				-->変数requestとして宣言されていなければならないはずですが、全てのJSPは等しくリクエストとレスポンスを操作することができますので、宣言が省略されているのです。これを<!--
+				-->暗黙オブジェクトといいます。HttpServletResponseについてもresponseという名前の暗黙オブジェクトが用意されています。</p>
+				<div class="tips blue-grey darken-2 z-depth-2">
+					<p>リクエストとレスポンスのほかにもHttpSession型の暗黙オブジェクトであるsession、ServletContext型の暗黙オブジェクトであるapplicationなどがありますが、<!--
+					-->これらについての説明は割愛します。（HttpSessionについては「セッションの利用」で解説します。）</p>
+				</div>
+				
+				<div class="section-return">
+					<a href="../../index.html" class="btn waves-effect waves-light">トップ</a>
+				</div>
+			</section>
+		</div>
+	</div>
+</body>
+</html>
