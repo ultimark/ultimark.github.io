@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link rel="stylesheet" href="../../css/style.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<title>JSP-サーブレット間の連携</title>
+</head>
+<body class="blue-grey darken-4 grey-text text-lighten-5">
+	<div class="layout-container">
+		<div class="navbar-fixed">
+			<nav class="grey darken-4">
+				<div class="nav-wrapper">
+					<div class="container">
+						<a href="index.html" class="brand-logo">Ultimark</a>
+					</div>
+				</div>
+			</nav>
+		</div>
+		<div class="container layout-content">
+			<h4 class="layout-title">JSP-サーブレット間の連携</h4>
+			<section class="section z-depth-2">
+				<h5 class="section-title">１．JSPからサーブレットへの連携</h5>
+				<p>JSPからサーブレットへのデータ連携を考える場合、Webブラウザに表示されているJSPがどういう状態なのか理解している必要があります。誤解を恐れずに言うと<!--
+				-->Webブラウザに表示されているJSPは実は単なるHTMLです。実際に見てみましょう。JSPをWebブラウザに表示した状態が以下の図です。</p>
+				<img src="../../img/WS000045.JPG" class="responsive-img z-depth-2"/>
+				<p><a href="request-response.html" target="_blank">前回の記事</a>でお見せしたスクリプトレットのサンプルですね。ということは当然これはJavaの<!--
+				-->プログラムが埋め込まれたJSPファイルであるということになります。ではブラウザに付属している開発ツールで今表示されている画面のソースコードを確認してみましょう。<!--
+				-->ブラウザ上でF12を押下してみてください。</p>
+				<img src="../../img/WS000046.JPG" class="responsive-img z-depth-2"/>
+				<p>スクリプトレットも式もきれいさっぱり消えてしまっています。Webブラウザ自身はスクリプトレットも式も解釈できませんので当然と言えば当然なのですが、JSPからサーブレットへ<!--
+				-->データを連携する際は、Webブラウザに表示されている状態のJSPは単なるHTMLに過ぎないという認識を持つことが大事です。これはつまり、JSPからサーブレットへのデータ<!--
+				-->連携は”Javaプログラム的な”手法では実現できないということを意味しています。なぜなら、Webブラウザに表示されたJSPからはJavaプログラムが失われてしまっているから<!--
+				-->です。</p>
+				<p>Webブラウザに表示されている状態のJSPはもはや単なるHTMLファイルです。それ以外の何者でもありません。従って、JSPからサーブレットへのデータ連携は”HTML的な”<!--
+				-->手段によるほかありません。HTMLフォームの送信（サブミット）です。</p>
+				
+				<h5 class="section-title">２．JSPにおけるHTMLフォームの実装</h5>
+				<p>HTMLフォームとはformタグに囲われたHTML上のコンポーネントのことです。action属性にURLを指定すると、そのURLがWebサーバーにリクエストされます。と同時に<!--
+				-->formタグの内側に記述されたinputタグが持っている値（より正確に言うとinputタグが持つvalue属性の値）がサーバーに送信されます。これをリクエストパラメータと<!--
+				-->いいます。実際にサンプルを見てみましょう。sample.jspを以下のように修正します。</p>
+				<img src="../../img/WS000047.JPG" class="responsive-img z-depth-2"/>
+				<p>ブラウザに表示すると以下のようになります。</p>
+				<img src="../../img/WS000048.JPG" class="responsive-img z-depth-2"/>
+				<p>続いてSampleServletクラスを以下のように修正しました。</p>
+				<img src="../../img/WS000049.JPG" class="responsive-img z-depth-2"/>
+				<p>Tomcatを起動してhttp://localhost:8080/servlet-sample/sample.jspにアクセスし、以下の画面のように入力して送信ボタンをクリックしてみてください。</p>
+				<img src="../../img/WS000050.JPG" class="responsive-img z-depth-2"/>
+				<p>送信ボタン押下後に以下のような画面が表示されたでしょうか。</p>
+				<img src="../../img/WS000051.JPG" class="responsive-img z-depth-2"/>
+				<p>左側に表示されているのがリクエストパラメータ名、右側に表示されているのがリクエストパラメータ値です。リクエストパラメータはパラメータ名：パラメータ値のセットになっており<!--
+				-->以下の構文でパラメータ値を取り出すことができます。</p>
+				<div class="code-snipet blue-grey darken-2 z-depth-2">
+					<p>request.getParameter(パラメータ名);</p>
+				</div>
+				<p>ではパラメータ名はどのように決定されているのでしょうか。よく見ると（よく見なくても）inputタグが持つname属性の値がそのままパラメータ名になっていることに気付くと思います。<!--
+				-->HTMLフォームではinputタグのname属性をパラメータ名にして、value属性の値がサーバーに送信されるということが理解できたと思います。HTMLフォームについてはこの後の記事で<!--
+				-->更に詳細に解説していきます。ここではJSPからサーブレットに値を連携するためにはリクエストパラメータを利用するということをおさえておいてください。</p>
+				
+				<h5 class="section-title">３．サーブレットからJSPへの連携</h5>
+				<p>サーブレットはいわば特定のURLがリクエストされるまでアプリケーションサーバーで待機しているプログラムです。<a href="web-basic.html" target="_blank">Webアプリの仕組み</a><!--
+				-->を思い出してください。サーブレットが直接Webクライアントにレスポンスを返すのではなく、あくまでもWebサーバーに対してレスポンスを返しているということでしたね。サーブレットから<!--
+				-->JSPへの連携はアプリケーションサーバー内で行われ、アプリケーションサーバーはJSPを解釈してHTMLを生成し、Webサーバーに返しています。従って、サーブレットからJSPへの連携は<!--
+				-->実は完全にJavaの実行環境の中での話なのです。要するにサーブレットからJSPへの連携には”Java的な”手法がとれるということです。</p>
+				
+				<h5 class="section-title">４．リクエスト属性の利用</h5>
+				<p>サーブレットからJSPへデータの連携を行う方法はいくつかありますが、ここではリクエスト属性（Request Attribute）を使った方法を解説していきます。他にもセッションを使った方法や<!--
+				-->極端な話、テキストファイルやデータベースを使っても連携は可能です。しかし、サーブレットからJSPにいくつかの値を連携したいだけなのにデータベースを持ち出すのも少々大げさですし、<!--
+				-->セッションは明らかに目的が違います。</p>
+				<div class="code-snipet blue-grey darken-2 z-depth-2">
+					<p>request.setAttribute(キー, 値);&emsp;// リクエスト属性への値の設定<br><!--
+					 -->request.getAttribute(キー);&emsp;&emsp;&nbsp;// リクエスト属性から値を取得</p>
+				</div>
+				<p>上記のコードがリクエスト属性に値を設定する書式になります。いずれもHttpServletRequestオブジェクトのメソッドです。サーブレットとJSPはいずれもHttpServletRequestオブジェクト<!--
+				-->にアクセスできますので、サーブレット側でrequest.setAttributeで値を設定し、JSP側でrequest.getAttributeを使って設定された値を取得するというのが基本的な使い方になります。<!--
+				-->request.getAttributeメソッドの戻り値はObject型ですので、リクエスト属性には数値や文字列だけでなくJavaオブジェクトを設定することもできます。具体的な使い方を見ていきましょう。<!--
+				-->SampleServletクラスを以下のように修正します。</p>
+				<img src="../../img/WS000052.JPG" class="responsive-img z-depth-2"/>
+				<p>またsample.jspは以下のように修正します。</p>
+				<img src="../../img/WS000053.JPG" class="responsive-img z-depth-2"/>
+				<p>それではTomcatを起動して実行してみましょう。</p>
+				<img src="../../img/WS000054.JPG" class="responsive-img z-depth-2"/>
+				<img src="../../img/WS000055.JPG" class="responsive-img z-depth-2"/>
+				<p>サーブレット側で設定したメッセージがJSPに反映されていることが確認できました。</p>
+				
+				<h5 class="section-title">５．リクエストの生存期間</h5>
+				<p>JSPからサーブレット、あるいはサーブレットからJSPへのデータ連携を実装するにあたってはリクエストの生存期間（スコープ）を理解しておくことは重要です。一口にリクエストと言っても<!--
+				-->誰から誰へのリクエストなのか？ということを頭に入れておかないとアプリケーションが意図しない動きをしてしまうことがあります。例えば、先ほどの例ではWebブラウザでsample.jspに<!--
+				-->アクセスし、sample.jspでフォームをサブミットすることでSampleServletにアクセスしました。SampleServletはsample.jspにリクエストを転送しています（上記SampleServlet<!--
+				-->の30行目）。これら一連のリクエストの流れを図にすると以下のようになります。</p>
+				<img src="../../img/WS000056.JPG" class="responsive-img z-depth-2"/>
+				<p>そして、これは非常に重要なことなのですが、これら一連のリクエストは全て別々のリクエストです。つまり、Webサーバーからsample.jspにリクエストされた時のHttpServletRequest<!--
+				-->オブジェクト、sample.jspでフォームをサブミットした際に生成される（＝SampleServlet#doGetメソッドの引数に渡される）HttpServletRequestオブジェクト、SampleServlet<!--
+				-->からsample.jspにリクエストが送信された際に生成されるHttpServletRequestオブジェクトは全て別のオブジェクトであるということです。例えば、sample.jspを以下のように修正した<!--
+				-->場合、SampleServletへ値を引き継ぐことはできるでしょうか？</p>
+				<img src="../../img/WS000057.JPG" class="responsive-img z-depth-2"/>
+				<p>12行目にリクエスト属性の設定を追加しました。この状態でフォームをサブミットするとSampleServletにjava.util.Dateオブジェクトは連携されるでしょうか。無論試すまでもなく<!--
+				-->連携されません。スクリプトレットはJSPへのリクエストがあった際に評価され、その時点でスクリプトレットの中に記述されたJavaプログラムが実行されます。では、sample.jspに<!--
+				-->にリクエストがあるタイミングとはいつでしょうか。上記の図で言うところの１と３です。sample.jspからSampleServletへのリクエストは２のリクエストですから、SampleServlet<!--
+				-->ではsample.jspで設定したリクエスト属性を取得することはできません。</p>
+				<p>にわかには理解しがたい内容も多かったと思いますが、リクエストのスコープをきちんと把握することはJavaに限らずWebアプリケーションを開発するエンジニアにとってとても重要な<!--
+				-->ことです。自分で色々と試行錯誤しながら理解を深めてください。次回は入力フォームのある画面の開発を徹底的に攻略していきます。</p>
+				
+				<div class="section-return">
+					<a href="../../index.html" class="btn waves-effect waves-light">トップ</a>
+				</div>
+			</section>
+		</div>
+	</div>
+</body>
+</html>
