@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+<link rel="stylesheet" href="../../css/style.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<title>良いオブジェクトの条件</title>
+</head>
+<body class="blue-grey darken-4 grey-text text-lighten-5">
+	<div class="layout-container">
+		<div class="navbar-fixed">
+			<nav class="grey darken-4">
+				<div class="nav-wrapper">
+					<div class="container">
+						<a href="../../index.html" class="brand-logo">Ultimark</a>
+					</div>
+				</div>
+			</nav>
+		</div>
+		<div class="container layout-content">
+			<h4 class="layout-title">良いオブジェクトの条件</h4>
+			<section class="section z-depth-2">
+				<h5 class="section-title">１．良いオブジェクトは実在する</h5>
+				<p>そもそもオブジェクト指向は現実世界に存在するモノをオブジェクトとしてプログラム上に表現し、システム全体を複数のオブジェクトの相互作用として認識する考え方です。<!--
+				-->従って、この前提に立って考えるなら、プログラム上に構築されるオブジェクトはプログラムの外の世界に存在するモノをプログラム上に再現したものでなければならないという<!--
+				-->ことになります。しかし、現実はXMLパーサー、バリデーター、業務ロジックというように、実在しないオブジェクト（または本来オブジェクトに内包されるべき手続き）がプログラム上に<!--
+				-->のみ存在するというケースが多々あります。これらのうちのいくつかは名前を変えることで正しいオブジェクトになる可能性があります。例えばXMLパーサー（XmlParser）は<!--
+				-->パース可能なXML（ParsableXml）に改名することで正しいオブジェクトになります。</p>
+				<div class="code-snipet blue-grey darken-2 z-depth-2">
+					<p>正しいオブジェクトへの改名の例</p>
+					<table class="browser-default" style="width: 100%;">
+						<col width="30%"/>
+						<col width="10%"/>
+						<col width="60%"/>
+						<tr>
+							<td>元の名前</td>
+							<td></td>
+							<td>改名後の名前</td>
+						</tr>
+						<tr>
+							<td>FormValidator</td>
+							<td>→</td>
+							<td>ValidatableForm</td>
+						</tr>
+						<tr>
+							<td>FileReader</td>
+							<td>→</td>
+							<td>ReadableFile</td>
+						</tr>
+					</table>
+				</div>
+				<p>クラス設計を行う際は、そのクラスのインスタンスが指し示すモノは何か考えるようにしましょう。もしそのクラスのインスタンスが表現するモノが現実世界に存在しないのならば、<!--
+				-->そのクラス設計は間違っています。</p>
+				
+				<h5 class="section-title">２．良いオブジェクトは不変</h5>
+				<p>良いオブジェクトは不変（immutable）であるべきです。これはオブジェクトが持つ状態は後から変更できないという意味ではありません（よくこのように誤解されますが）。<!--
+				-->一度生み出されたオブジェクトは、それが指し示す実体から離れないというのがimmutableの意味です。イメージが沸きづらいので例を挙げて説明しましょう。</p>
+				<div class="code-snipet blue-grey darken-2 z-depth-2">
+					<p>String str = "ABC";<br>str.toLowerCase();<br>System.out.println(str);</p>
+				</div>
+				<p>最初に少し解説すると、toLowerCaseメソッドは文字列を小文字にするメソッドです。従って、2行目のstr.toLowerCase()によって"abc"という文字列が得られます。<!--
+				-->それでは、3行目で出力される文字列は何でしょうか？答えは"ABC"です。toLowerCaseメソッドの呼び出しによってStringオブジェクトが表現する"ABC"という文字列の<!--
+				-->実体は変更されません。同じように大文字にするtoUpperCaseメソッドや文字列の特定の部分だけ切り出すsubstringメソッドも、それらの実行によって得られる文字列は<!--
+				-->元の文字列とは異なりますが、これは元のStringオブジェクトが指し示す文字列に影響を与えません。従って、Stringオブジェクトは不変オブジェクトです。<!--
+				-->不変オブジェクトの真意は、それが指し示す実体を外から変更してはならない、という点にあります。</p>
+				
+				<h5 class="section-title">３．良いオブジェクトは契約によって働く</h5>
+				<p>オブジェクトが持つパブリックメソッドは全てインタフェースで定義されたものであるべきです。それ以外のパブリックメソッドは持つべきではありません。と言うよりも、オブジェクト指向<!--
+				-->におけるオブジェクトは他のオブジェクトからの何らかの要求に応じて機能を提供するものであり、この文脈における「何らかの要求」とは紛れもなくインタフェースに定義されたメソッド<!--
+				-->のことです。あるオブジェクトが欲する機能はインタフェースとして表現される以上、要求される側のオブジェクトが公開するパブリックメソッドは必然的にインタフェースを実装したもの<!--
+				-->になるはずです。</p>
+				<img src="../../img/WS000101.JPG" class="responsive-img z-depth-2" />
+				<p>上の図を見てください。従業員オブジェクトは会社オブジェクトの要求に応えるべく雇用契約に従い、顧客オブジェクトの要求に応えるべく商品販売契約に従います。<!--
+				-->実際のところ、雇用契約と商品販売契約に従うオブジェクトに期待されるのは、それぞれの契約で規定されたメソッドを実装することのみです。それ以外の公開メソッド<!--
+				-->は誰からも期待されていません。誰からも期待されていないメソッドをパブリックにしておく理由はありません。</p>
+				<div class="tips blue-grey darken-2 z-depth-2">
+					<p>自分自身と外部のオブジェクトの関係性で言うと、インタフェースによって期待されないパブリックメソッドは（誰からも利用されないと言う意味で）無意味ですが、<!--
+					-->自分自身や自分のサブクラスが利用するメソッドもあり得ます。このような場合はprivateやprotectedなどで適切にアクセス制御を行うようにしましょう。</p>
+				</div>
+				
+				<h5 class="section-title">４．良いオブジェクトはスタティックメソッドを持たない</h5>
+				<p>良いオブジェクトはスタティックなメソッドや変数を持ちません。そもそもスタティックなメンバーはオブジェクトに内包されるものではなく、クラスに付随するものです。従って<!--
+				-->クラスローダーによってクラスがメモリ上にロードされた瞬間からどこからでも利用することが可能です。勘の良い人は気付いたかもしれませんが、スタティックメンバーは<!--
+				-->本質的にスレッドセーフではないということです。スタティックメンバーは本来オブジェクト指向には必要のない概念です。</p>
+				<p>しかし、実際の開発現場ではユーティリティクラスと称して、インスタンスすることなく利用できる大量のスタティックメソッドを持ったクラスをよく目にします。ユーティリティクラス<!--
+				-->はその名前のとおり様々なメソッドを提供しますが、よくあるのはログ出力や文字列操作など、どの機能にもそれなりに需要のある機能（いわゆる横断的関心事）を提供<!--
+				-->しているユーティリティクラスです。</p>
+				<code class="blue-grey darken-2 z-depth-2">
+					packege foo.bar.baz;<br><br>
+					public class Logger {<br><br>
+					&emsp;&emsp;public static void info(String message) {<br>
+					&emsp;&emsp;&emsp;&emsp;// ログ出力処理<br>
+					&emsp;&emsp;}<br>
+					}
+				</code>
+				<p>なぜどこからでも利用できるようにしておく必要があるのでしょうか。それはいつ誰が使うか分からないからです。それ以外に理由はありません。ただ、それにしても他にやりようが<!--
+				-->ないのでしょうか。いいえ、そんなことはありません。ログ出力が必要な全てのクラスの基底クラスにログ出力処理を（もちろんfinalで）記述してしまえば良いのです。実に簡単<!--
+				-->な話です。</p>
+				<p>オブジェクト指向にスタティックメンバーは必要ありません。適切なクラス設計を行うことで、スタティックメンバーをシステムから追放してください。</p>
+				
+				<div class="section-return">
+					<a href="../../index.html" class="btn waves-effect waves-light">トップ</a>
+				</div>
+			</section>
+		</div>
+	</div>
+</body>
+</html>

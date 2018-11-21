@@ -35,3 +35,14 @@ body {
 	padding: 0;
 	overflow-y: auto;
 }
+table.browser-default {
+	margin: 16px 0px;
+}
+table.browser-default td {
+	padding: 4px;
+}
+code {
+	width: 100%;
+	display: block;
+	padding: 4px 8px;
+}
