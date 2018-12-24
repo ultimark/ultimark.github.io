@@ -87,14 +87,16 @@
 				<p>しかし、実際の開発現場ではユーティリティクラスと称して、インスタンスすることなく利用できる大量のスタティックメソッドを持ったクラスをよく目にします。ユーティリティクラス<!--
 				-->はその名前のとおり様々なメソッドを提供しますが、よくあるのはログ出力や文字列操作など、どの機能にもそれなりに需要のある機能（いわゆる横断的関心事）を提供<!--
 				-->しているユーティリティクラスです。</p>
-				<code class="blue-grey darken-2 z-depth-2">
-					packege foo.bar.baz;<br><br>
-					public class Logger {<br><br>
-					&emsp;&emsp;public static void info(String message) {<br>
-					&emsp;&emsp;&emsp;&emsp;// ログ出力処理<br>
-					&emsp;&emsp;}<br>
-					}
-				</code>
+<pre>
+<code class="blue-grey darken-2 z-depth-2">packege foo.bar.baz;
+
+public class Logger {
+  public static void info(String message) {
+    // ログ出力処理
+  }
+}
+</code>
+</pre>
 				<p>なぜどこからでも利用できるようにしておく必要があるのでしょうか。それはいつ誰が使うか分からないからです。それ以外に理由はありません。ただ、それにしても他にやりようが<!--
 				-->ないのでしょうか。いいえ、そんなことはありません。ログ出力が必要な全てのクラスの基底クラスにログ出力処理を（もちろんfinalで）記述してしまえば良いのです。実に簡単<!--
 				-->な話です。</p>
