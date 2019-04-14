@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link rel="stylesheet" href="../../css/style.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<title>SQLの基本</title>
+</head>
+<body class="blue-grey darken-4 grey-text text-lighten-5">
+	<div class="layout-container">
+		<div class="navbar-fixed">
+			<nav class="grey darken-4">
+				<div class="nav-wrapper">
+					<div class="container">
+						<a href="../../index.html" class="brand-logo">Ultimark</a>
+					</div>
+				</div>
+			</nav>
+		</div>
+		<div class="container layout-content">
+			<h4 class="layout-title">SQLの基本</h4>
+			<section class="section z-depth-2">
+				<h5 class="section-title">１．DDLとDML</h5>
+				<p>SQLにはDDL（Data Definition Language）とDML（Data Manipulation Language）があります。DDLはテーブルを作成したり削除したりテーブル定義を<!--
+				-->変更したりする場合に用いられるSQLです。知っておいても損はありませんが、実際のシステム開発プロジェクトにおいて個別の担当者がDDLを使わなければならないケースはほぼ<!--
+				-->ないでしょう。これに対してDMLはデータの登録、読み取り、更新、削除を行うためのSQLです。通常はSQLといえばDMLのことを指します。</p>
+				<p>データベースと連携するシステムを開発するエンジニアは（データベースと連携しないシステムを開発することはまず考えられませんが）DMLの知識が必ず要求されます。このような<!--
+				-->背景から本稿ではDDLの説明は割愛し、DMLに絞って解説をしていくこととします。</p>
+				<div class="tips blue-grey z-depth-2">
+					<p>DMLにはデータの登録（Create）、読み取り（Read）、更新（Update）、削除（Delete）という四つの主要な操作があります。これらの操作を総称して、それぞれの<!--
+					-->頭文字をとったCRUD（クラッド）という呼び方があります。本教育プログラムではCRUDすべてについて基本的な文法を学びますが、実際のシステム開発プロジェクトで<!--
+					-->記述するSQLの大半はデータの読み取り（Read）です。この為、本教育プログラムではデータの読み取りを行うためのSQLについて重点的に解説していきます。</p>
+				</div>
+				
+				<h5 class="section-title">２．データの登録</h5>
+				<p>データの登録を行うにはINSERT文を使います。INSERT文の基本的な構文は以下の通りです。</p>
+				<div class="code-snipet blue-grey z-denpth-2">
+					<p>INSERT INTO {テーブル名}<br/><!--
+					-->(項目名1,項目名2,項目名3)<br/><!--
+					-->VALUES<br/><!--
+					-->(値1,値2,値3)</p>
+				</div>
+				<p>上記の例では項目名1に値1を、項目名2に値2を、そして項目名3に値3をセットしてレコードを新たに作成します。INSERT文自体は特に難しいこともなく比較的簡単に理解<!--
+				-->できますが、レコードを新たに作成するということは既にあるレコードと主キーが重複する可能性をもつということです（一意制約）。このため、一般的にはINSERT文を実行する前に<!--
+				-->これから作成しようとしているレコードの主キーが既に存在していないかチェックする処理が行われます。</p>
+				<div class="tips blue-grey z-depth-2">
+					<p>実際の開発ではこれから作成しようとしているレコードの主キーが既に存在している場合は更新、存在していなければ登録という処理がよく行われます。このような処理を<!--
+					-->UPSERT（UPDATEとINSERTをくっつけた造語）といいます。UPSERTを行うための構文としてMERGE（マージ）文がありますが、MERGE文は少々難解ですので本項<!--
+					-->の説明範囲からは除外しています。</p>
+				</div>
+				
+				<h5 class="section-title">３．データの読み取り</h5>
+				<p>データの読み取りを行うためにはSELECT文を使います。一口にSELECT文といっても様々なパターンがあり、その全てを一度に理解するのはとても難しいことです。しかし、<!--
+				-->「SELECT文を制する者はSQLを制する」と言われるほどSELECT文はSQLの中では重要な位置を占めています。SELECT文の詳細については後の章で解説するとして、<!--
+				-->ここではSELECT文がどのような構造で成り立っているか？ということを中心に解説していきます。SELECT文の基本的な構文は以下の通りです。</p>
+				<div class="code-snipet blue-grey z-depth-2">
+					<p>SELECT&emsp;項目名1,項目名2,項目名3,項目名4<br/><!--
+					-->FROM&emsp;{テーブル名}<br/><!--
+					-->WHERE&emsp;項目名 = 値</p>
+				</div>
+				<p>SELECT文は大きく分けてテーブルから取得する項目を選択するSELECT句、参照したいテーブルを指定するFROM句、検索条件を指定するWHERE句の三つのパートから<!--
+				-->なります。この中で最も重要なのはWHERE句です。つまりSELECT文を理解するためにはWHERE句を理解することが最も重要であるということです。</p>
+				<img src="../../img/WS000102.JPG" class="responsive-img z-depth-2" />
+				<p>この図は前章で出てきた従業員テーブルです。この従業員テーブルから経理部に所属する従業員の氏名を検索したい場合は以下のようなSQLになります。</p>
+				<div class="code-snipet blue-grey z-depth-2">
+					<p>SELECT 氏名 FROM 従業員 WHERE 所属部署 = '経理部'</p>
+				</div>
+				<p>これはあくまでも極めてシンプルなテーブルを使った極めて単純な例ですが、複雑なテーブルであっても基本的なルールは同じです。また、WHERE句を駆使することによって相当に<!--
+				-->複雑な検索処理を実現することもできます。</p>
+				
+				<h5 class="section-title">４．データの更新</h5>
+				<p>データの更新はUPDATE文を使います。まずはUPDATE文の構文を見てみましょう。</p>
+				<div class="code-snipet blue-grey z-depth-2">
+					<p>UPDATE&emsp;{テーブル名}<br/><!--
+					-->SET&emsp;項目名 = 値<br/><!--
+					-->WHERE&emsp;項目名 = 値</p>
+				</div>
+				<p>このUPDATE文にもWHERE句が登場しました。これは更新すべきレコードをWHERE句によって絞り込んだ後にSET句で指定した更新を行っているためです。つまりUPDATE文も<!--
+				-->内部的には検索処理が実行されているということになります。SELECT文が最も重要であるという理由はここにあります。UPDATE文であっても、この後解説するDELETE文であっても<!--
+				-->内部的に一度検索処理が実行されるのです。従って検索処理を司るSELECT文を理解してしまえばUPDATE文やDELETE文も自ずと理解できてしまうのです。</p>
+				<img src="../../img/WS000102.JPG" class="responsive-img z-depth-2" />
+				<p>それでは先ほどの従業員テーブルを使ってUPDATE文を練習してみましょう。</p>
+				<div class="code-snipet blue-grey z-depth-2">
+					<p>UPDATE 従業員 SET 所属部署 = '人事部' WHERE 社員番号 = '0001'</p>
+				</div>
+				<p>上記のSQLでは社員番号が0001のレコードの所属部署を人事部に更新しています。これは内部的に社員番号が0001のレコードを検索し、検索にヒットしたレコードの所属部署を<!--
+				-->人事部に更新しているという処理を実行しています。この例では従業員テーブルの主キーである社員番号を検索条件としているため、更新されるレコードは必ず1レコードとなりますが、<!--
+				-->下記のようなSQLに修正すると複数レコードをまとめて更新することもできます。</p>
+				<div class="code-snipet blue-grey z-depth-2">
+					<p>UPDATE 従業員 SET 所属部署 = '人事部' WHERE 所属部署 = '営業部'</p>
+				</div>
+				<p>この例では所属部署が営業部のレコードを全て人事部所属に更新しています。結局のところ、UPDATE文においてもWHERE句によって更新対象をどのように絞り込むかということが<!--
+				-->ポイントになると理解できたと思います。</p>
+				
+				<h5 class="section-title">５．データの削除</h5>
+				<p>データの削除にはDELETE文を用います。厳密にはDELETE文はデータの削除というよりはレコードの削除を行うための構文と言った方が正確です。早速構文を確認してみましょう。</p>
+				<div class="code-snipet blue-grey z-depth-2">
+					<p>DELETE FROM {テーブル名} WHERE 項目名 = 値</p>
+				</div>
+				<p>やはりここでもWHERE句が出てきました。これはUPDATE文と同様の理由で、内部的には削除すべきレコードを検索して特定してから削除を実行しているからです。つまりDELETE文<!--
+				-->においても内部的に検索処理が実行されていることになります。それではまた従業員テーブルに登場してもらいましょう。</p>
+				<img src="../../img/WS000102.JPG" class="responsive-img z-depth-2" />
+				<p>この中から社員番号が0003のレコードを削除したい場合、SQLは以下のようになります。</p>
+				<div class="code-snipet blue-grey z-depth-2">
+					<p>DELETE FROM 従業員 WHERE 社員番号 = '0003'</p>
+				</div>
+				<p>以上がDMLの基本的な書き方です。どのような複雑なSQLでも構造をしっかりとらえれば必ず理解できるようになります。そのためには基本的な文法の知識を身に付けておくことが大事です。<!--
+				-->この章の内容はきちんと理解しておきましょう。</p>
+				
+				<div class="section-return">
+					<a href="../../index.html" class="btn waves-effect waves-light">トップ</a>
+				</div>
+			</section>
+		</div>
+	</div>
+</body>
+</html>

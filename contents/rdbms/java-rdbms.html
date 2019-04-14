@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link rel="stylesheet" href="../../css/style.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<title>JavaとRDBMSの連携</title>
+</head>
+<body class="blue-grey darken-4 grey-text text-lighten-5">
+	<div class="layout-container">
+		<div class="navbar-fixed">
+			<nav class="grey darken-4">
+				<div class="nav-wrapper">
+					<div class="container">
+						<a href="../../index.html" class="brand-logo">Ultimark</a>
+					</div>
+				</div>
+			</nav>
+		</div>
+		<div class="container layout-content">
+			<h4 class="layout-title">JavaとRDBMSの連携</h4>
+			<section class="section z-depth-2">
+				<h5 class="section-title">１．JDBCドライバ</h5>
+				<p>JavaプログラムからデータベースへアクセスするためにはJDBCドライバというJavaプログラムとデータベースを接続するための特殊なライブラリを使う必要があります。<!--
+				-->JDBCドライバはデータベース製品ごとに異なった実装となっており、OracleにはOracleのJDBCドライバ、MySQLにはMySQLのJDBCドライバという具合に、<!--
+				-->製品ごとに異なったものを使う必要があります。本教育プログラムではOracleを利用しますのでOracleのJDBCドライバを<a href="../lib/ojdbc6.jar">こちら</a><!--
+				-->からダウンロードしてください。</p>
+				<img src="../../img/WS000105.JPG" class="responsive-img z-depth-2" />
+				<p>本教育プログラムに沿ってWebアプリケーションプロジェクトを作成している場合は上記のようなフォルダ構成になっているはずです。ダウンロードしてきたJDBCドライバは<!--
+				-->libフォルダの中に配置してください。TomcatはWEB-INFフォルダ配下のlibフォルダをクラスパスに含めるように設定されていますので、JDBCドライバだけでなく、<!--
+				-->外部ライブラリを使う場合は全てこのlibフォルダ配下に配置することになります。</p>
+				
+				<h5 class="section-title">２．Tomcat側の設定</h5>
+				<p>Tomcatにはデフォルトでコネクションプーリング（DBCP）という仕組みがあります。これはJavaとデータベースの接続情報をあらかじめ貯蔵（プール）しておいて、<!--
+				-->毎回データベースとの接続を確立するのではなく予めデータベースとの接続を確立してプールしておくことで、ただちにデータベースにアクセスすることができるように<!--
+				-->するための仕組みです。DBCP自体はそれほど難しい仕組みではないのですが、あらかじめ準備しておかなければならないことが多く、それを一つ一つ細かく解説<!--
+				-->することは本教育プログラムの趣旨から逸脱しますので、ここは本稿で説明する通りに準備を行っていください。</p>
+				
+				<p>準備1：context.xmlの作成<br/><!--
+				-->以下の内容でcontext.xmlという名前のファイルを作成してください。</p>
+				<div class="code-snipet blue-grey z-depth-2">
+					<p>&lt;?xml version="1.0" encoding="UTF-8"?&gt;<br/><!--
+					-->&lt;Context path="/{プロジェクト名}" reloadable="true" docBase="{ワークスペースへのパス}\{プロジェクト名}\webapp"&gt;<br/><!--
+					-->&lt;Resource name="jdbc/oracle"<br/><!--
+					-->&emsp;&emsp;&emsp;&emsp;&emsp;auth="Container" type="javax.sql.DataSource"<br/><!--
+					-->&emsp;&emsp;&emsp;&emsp;&emsp;maxActive="150" maxIdle="50" maxWait="15000"<br/><!--
+					-->&emsp;&emsp;&emsp;&emsp;&emsp;username="DWH_SZ" password="DWH_SZ" driverClassName="oracle.jdbc.driver.OracleDriver"<br/><!--
+					-->&emsp;&emsp;&emsp;&emsp;&emsp;url="jdbc:oracle:thin:@ulti-serv2:1521:ultidb1"/&gt;<br/><!--
+					-->&lt;/Context&gt;</p>
+				</div>
+				<p>プロジェクト名が「ultimark」、プロジェクトのワークスペースが「C:\pleiades\workspace」だった場合は以下のようになります。</p>
+				<div class="code-snipet blue-grey z-depth-2">
+					<p>&lt;?xml version="1.0" encoding="UTF-8"?&gt;<br/><!--
+					-->&lt;Context path="/ultimark" reloadable="true" docBase="C:\pleiades\workspace\webapp"&gt;<br/><!--
+					-->&lt;Resource name="jdbc/oracle"<br/><!--
+					-->&emsp;&emsp;&emsp;&emsp;&emsp;auth="Container" type="javax.sql.DataSource"<br/><!--
+					-->&emsp;&emsp;&emsp;&emsp;&emsp;maxActive="150" maxIdle="50" maxWait="15000"<br/><!--
+					-->&emsp;&emsp;&emsp;&emsp;&emsp;username="DWH_SZ" password="DWH_SZ" driverClassName="oracle.jdbc.driver.OracleDriver"<br/><!--
+					-->&emsp;&emsp;&emsp;&emsp;&emsp;url="jdbc:oracle:thin:@ulti-serv2:1521:ultidb1"/&gt;<br/><!--
+					-->&lt;/Context&gt;</p>
+				</div>
+				<p>作成したcontext.xmlはMETA-INFフォルダに配置してください。</p>
+				
+				<p>準備2：データベースオブジェクトの作成<br/><!--
+				-->Javaプログラムからデータベースへのアクセスを仲介するためのオブジェクト（データベースオブジェクト）を作成します。データベースオブジェクト自体は単なるJavaクラスです。<!--
+				-->とは言え、現時点でデータベースオブジェクトを作成するのは難しいと思いますので、上記の設定内容でcontext.xmlを作成したという前提ですぐに使えるデータベース<!--
+				-->オブジェクトのソースコードを作成しました。<a href="../lib/Database.java">こちら</a>からダウンロードし、jp.co.ultimark.commonパッケージ配下に配置してください。</p>
+				
+				<p>準備3：Javaプログラムからのデータベース接続確認<br/><!--
+				-->任意のJSPに以下の記述を追加してください。</p>
+				<div class="code-snipet blue-grey z-depth-2">
+					<p>&lt;%= new jp.co.ultimark.common.Database().connect() != null &gt;</p>
+				</div>
+				<p>trueと表示されればデータベースへの接続は成功です。</p>
+				
+				<h5 class="section-title">３．JavaからのSQL発行</h5>
+				<p>ここまで準備してようやくJavaからデータベースの操作が行えるようになりました。Javaでデータベースを操作する際に知っておかなければならないのは主に以下の三つです。<br /><!--
+				--></p>
+				<ul>
+					<li>java.sql.Connectionオブジェクト</li>
+					<li>java.sql.Statementオブジェクト</li>
+					<li>java.sql.ResultSetオブジェクト</li>
+				</ul>
+				<p>Connectionオブジェクトはデータベースとの接続そのものをあらわすオブジェクトです。データベースと対話する役割はConnectionオブジェクトが一手に引き受けます。<!--
+				-->Statementオブジェクトは端的に言ってSQLそのものをあらわすオブジェクトです。ここで言うSQLとはDDL、DMLを両方含みます。そして最後に紹介するのがResultSet<!--
+				-->オブジェクトです。名前で何となく想像がつくかもしれませんが、このオブジェクトはデータベースへ問い合わせをした結果を保持します。つまりSELECT文の実行結果です。</p>
+				
+				<p>Javaからデータベースを操作する際はこの三つのオブジェクトへの理解が欠かせません。このうちConnectionオブジェクトは（あまりにも重要過ぎて）プログラマーが自分で<!--
+				-->管理することはまずありません。このConnectionオブジェクトをプログラマーにかわって管理するのが前述のDBCPだと考えてください。従って本稿ではConnection<!--
+				-->オブジェクトを除いた他二つのオブジェクトに焦点を当てて解説していきます。</p>
+				
+				<h5 class="section-title">４．Statementオブジェクト</h5>
+				<p>先に説明した通り、StatementオブジェクトはSQLをあらわすオブジェクトです。Statementオブジェクトは必ずConnectionオブジェクトから生成されます。<!--
+				-->Statementオブジェクトの基本的な使い方を見てみましょう。</p>
+				<div class="code-snipet blue-grey z-depth-2">
+					<p>// connはConnectionオブジェクト<br /><!--
+					-->Statement statement = conn.createStatement();<br /><!--
+					-->statement.execute("UPDATE XXXX SET *** = '001' WHERE @@@ = '568'");</p>
+				</div>
+				<p>Statementオブジェクトのexecuteメソッドの引数を見れば一目瞭然ですが、Statementオブジェクトは指定されたSQLを実行する役割を持っています。<!--
+				-->上記はUPDATE文の例ですが、INSERT、SELECT、DELETEやDDLもStatementオブジェクトを介して実行することができます。</p>
+				
+				<h5 class="section-title">５．ResultSetオブジェクト</h5>
+				<p>ResultSetオブジェクトはSQLの実行結果を保持するオブジェクトです。関係データベースは表形式でデータを管理していますが、SELECT文の実行結果もまた<!--
+				-->表形式になっています。従って、必然的にResultSetオブジェクトは表形式のデータ構造となっています。ResultSetオブジェクトはSQLの実行結果として生成<!--
+				-->されるオブジェクトですから、常にStatementオブジェクトから生成されます。</p>
+				<div class="code-snipet blue-grey z-depth-2">
+					<p>// connはConnectionオブジェクト<br /><!--
+					-->Statement statement = conn.createStatement();<br /><!--
+					-->ResultSet resultSet = statement.executeQuery("SELECT XXX FROM ***");</p>
+				</div>
+				<p>上記の通り、ResultSetオブジェクトは常にStatement#executeQueryメソッドの戻り値として生成されます。ResultSetオブジェクトは表形式となっており、<!--
+				-->1レコードずつ取り出して処理することができます。それではResultSetオブジェクトの取り扱いを確認しましょう。</p>
+				<div class="code-snipet blue-grey z-depth-2">
+					<p>// resultSetはResultSetオブジェクト<br /><!--
+					-->while (resultSet.next()) { <br /><!--
+					-->&emsp;&emsp;String columnValue = resultSet.getString("ColumnName");<br /><!--
+					-->}</p>
+				</div>
+				<p>上記の例ではあるテーブルのColumnNameという列から文字列を取り出してcolumnValueに格納しています。しかし、これを実行するためにはColumnNameが文字列データを<!--
+				-->格納している必要があります。当然、データベースには文字列データだけでなく、数値型のデータや日付型のデータも格納されますので、getStringメソッドだけでは処理しきれません。<!--
+				-->ResultSetオブジェクトではこれらのようなデータにも対応できるようにgetIntメソッドやgetDoubleメソッド、getDateメソッドなどありとあらゆるデータ型に対応したメソッドが<!--
+				-->用意されています。</p>
+				
+				<h5 class="section-title">６．条件付きSQLの実行</h5>
+				<p>ここまでの解説で一応はJavaからデータベースを操作する方法を学ぶことができました。しかし、実際にはこれほど単純ではなく、例えば上記の解説では条件付きのSELECT文を<!--
+				-->発行したいという場合には対応できません。条件付きのSQLを発行するためにはPreparedStatementオブジェクトを用います。PreparedStatementもStatementと<!--
+				-->同様にConnectionオブジェクトから生成されます。</p>
+				<div class="code-snipet blue-grey z-depth-2">
+					<p>// connはConnectionオブジェクト<br /><!--
+					-->PreparedStatement statement = conn.prepareStatement("SELECT * FROM XXX WHERE CODE = ?");<br /><!--
+					-->statement.setString(1, "0000");</p>
+				</div>
+				<p>PreparedStatementを利用するにはConnection#prepareStatementメソッドを利用します。引数はSQLですが、WHERE句に注目してください。<!--
+				-->CODE = ?となっていますが、この?の部分が検索条件となる値になります。次の行のsetStringメソッドによって1番目の?を"0000"に置き換えているという<!--
+				-->意味になります。このPreparedStatementオブジェクトが発行するSQLは以下のようなものになります。</p>
+				<div class="code-snipet blue-grey z-depth-2">
+					<p>SELECT * FROM XXX WHERE CODE = '0000'</p>
+				</div>
+				<p>今回は少し覚えることが多いですが、これらの基本を理解してしまえばJavaから自由自在にSQLを扱うことができるようになります。しっかりと覚えておきましょう。</p>
+				
+				<div class="section-return">
+					<a href="../../index.html" class="btn waves-effect waves-light">トップ</a>
+				</div>
+			</section>
+		</div>
+	</div>
+</body>
+</html>
